@@ -50,13 +50,14 @@ Commit and push on a new `fix/<feature>` or `feat/<feature>` branch, raise a PR 
    EOF
    )" && \
    git push -u origin fix/<feature> && \
-   gh pr create -R Sai-Preetham007/claude --base main --head fix/<feature> --title "<commit-message>" --body "$(cat <<'EOF'
+   PR_URL=$(gh pr create -R Sai-Preetham007/claude --base main --head fix/<feature> --title "<commit-message>" --body "$(cat <<'EOF'
    ## Summary
    <short-summary>
 
    EOF
-   )" && \
-   gh pr merge -R Sai-Preetham007/claude --merge --delete-branch && \
+   )") && \
+   PR_NUM="${PR_URL##*/}" && \
+   gh pr merge "$PR_NUM" -R Sai-Preetham007/claude --merge --delete-branch && \
    git checkout main && \
    git pull origin main && \
    (git branch -d fix/<feature> 2>/dev/null || true) && \
